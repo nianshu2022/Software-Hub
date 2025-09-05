@@ -1,0 +1,28 @@
+{
+  "name": "software-hub",
+  "version": "1.0.0",
+  "description": "Software Hub - 个人软件推荐平台",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run serve",
+    "build": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "start": "cd server && npm start",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "deploy:client": "cd client && npm run build",
+    "deploy:server": "cd server && npm run build"
+  },
+  "keywords": ["software", "download", "vue", "mysql", "nodejs", "cloudflare", "pages"],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/software-hub.git"
+  },
+  "homepage": "https://software-hub.pages.dev",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
