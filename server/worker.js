@@ -1,4 +1,7 @@
+import { createServer } from 'node:http';
 import { httpServerHandler } from 'cloudflare:node';
 import app from './app.js';
 
-export default httpServerHandler(app);
+const server = createServer(app);
+
+export default httpServerHandler(server);
