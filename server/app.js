@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const softwareRoutes = require('./routes/software');
@@ -16,15 +15,22 @@ const app = express();
 // 安全中间件
 app.use(helmet());
 
-// 限流中间件
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15分钟
-  max: process.env.NODE_ENV === 'production' ? 100 : 1000, // 开发环境放宽限制
-  message: '请求过于频繁，请稍后再试',
-  standardHeaders: true,
-  legacyHeaders: false
-});
-app.use(limiter);
+// 限流中间件（在 Workers 环境下禁用，交由 Cloudflare WAF 限流以规避 global scope 定时器限制）
+const isWorker = typeof globalThis.navigator !== 'undefined' && globalThis.navigator.userAgent === 'Cloudflare-Workers';
+
+if (!isWorker) {
+  const rateLimit = require('express-rate-limit');
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15分钟
+    max: process.env.NODE_ENV === 'production' ? 100 : 1000, // 开发环境放宽限制
+    message: '请求过于频繁，请稍后再试',
+    standardHeaders: true,
+    legacyHeaders: false
+  });
+  app.use(limiter);
+} else {
+  app.use((req, res, next) => next());
+}
 
 // CORS配置
 app.use(cors({
