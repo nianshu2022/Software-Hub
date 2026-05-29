@@ -1,4 +1,4 @@
-const { env } = require('cloudflare:workers');
+import { env } from 'cloudflare:workers';
 
 const pool = {
   execute: async (sql, params = []) => {
