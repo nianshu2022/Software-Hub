@@ -12,6 +12,46 @@ const poetryRoutes = require('./routes/poetry');
 
 const app = express();
 
+const parseBody = async (req) => {
+  if (['GET', 'HEAD'].includes(req.method)) {
+    req.body = {};
+    return;
+  }
+
+  const chunks = [];
+  let size = 0;
+  const limit = 10 * 1024 * 1024;
+
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > limit) {
+      const error = new Error('请求体超过 10MB 限制');
+      error.status = 413;
+      throw error;
+    }
+    chunks.push(chunk);
+  }
+
+  const rawBody = Buffer.concat(chunks).toString('utf8');
+  if (!rawBody) {
+    req.body = {};
+    return;
+  }
+
+  const contentType = req.headers['content-type'] || '';
+  if (contentType.includes('application/json')) {
+    req.body = JSON.parse(rawBody);
+    return;
+  }
+
+  if (contentType.includes('application/x-www-form-urlencoded')) {
+    req.body = Object.fromEntries(new URLSearchParams(rawBody));
+    return;
+  }
+
+  req.body = rawBody;
+};
+
 // 安全中间件
 app.use(helmet());
 
@@ -41,8 +81,14 @@ app.use(cors({
 }));
 
 // 解析中间件
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(async (req, res, next) => {
+  try {
+    await parseBody(req);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 // 静态文件服务
 app.use('/uploads', express.static('uploads'));
