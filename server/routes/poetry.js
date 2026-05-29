@@ -7,7 +7,7 @@ router.get('/random', async (req, res) => {
   try {
     const [rows] = await pool.execute(`
       SELECT * FROM poetry 
-      ORDER BY RAND() 
+      ORDER BY RANDOM() 
       LIMIT 1
     `);
     
@@ -28,15 +28,15 @@ router.get('/featured', async (req, res) => {
     const [rows] = await pool.execute(`
       SELECT * FROM poetry 
       WHERE is_featured = 1 
-      ORDER BY RAND() 
+      ORDER BY RANDOM() 
       LIMIT 1
     `);
     
     if (rows.length === 0) {
       // 如果没有推荐诗词，返回随机一首
-      const [randomRows] = await db.execute(`
+      const [randomRows] = await pool.execute(`
         SELECT * FROM poetry 
-        ORDER BY RAND() 
+        ORDER BY RANDOM() 
         LIMIT 1
       `);
       return res.json({ success: true, data: randomRows[0] || null });
@@ -81,7 +81,7 @@ router.get('/', async (req, res) => {
     `, [...params, parseInt(limit), offset]);
     
     // 获取总数
-    const [countRows] = await db.execute(`
+    const [countRows] = await pool.execute(`
       SELECT COUNT(*) as total FROM poetry 
       WHERE 1=1 ${whereClause}
     `, params);
@@ -126,7 +126,7 @@ router.post('/', async (req, res) => {
   try {
     const { title, author, dynasty, content, translation, notes, tags, is_featured } = req.body;
     
-    const [result] = await db.execute(`
+    const [result] = await pool.execute(`
       INSERT INTO poetry (title, author, dynasty, content, translation, notes, tags, is_featured)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `, [title, author, dynasty, content, translation, notes, JSON.stringify(tags || []), is_featured]);
@@ -166,7 +166,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     
-    await db.execute('DELETE FROM poetry WHERE id = ?', [id]);
+    await pool.execute('DELETE FROM poetry WHERE id = ?', [id]);
     
     res.json({ success: true, message: '古诗词删除成功' });
   } catch (error) {

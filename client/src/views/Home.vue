@@ -916,9 +916,7 @@ const openAdminPanel = () => {
   width: 100%;
   max-width: 1700px;
   min-height: 100vh;
-  max-height: 900px;
   margin: 0 auto;
-  overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -928,7 +926,6 @@ const openAdminPanel = () => {
   padding-top: 70px;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   flex: 1;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -2332,15 +2329,10 @@ const openAdminPanel = () => {
 
 // 响应式设计
 @media (max-width: 1024px) {
-  .home {
-    max-height: 800px;
-  }
-  
   .hero-layout {
     flex-direction: column;
     gap: 30px;
     flex: 1;
-    max-height: 700px;
   }
   
   .hero-info-panel {
@@ -2406,18 +2398,12 @@ const openAdminPanel = () => {
 
 
 @media (max-width: 768px) {
-  .home {
-    max-height: 700px;
-  }
-  
   .main-content {
     padding-top: 60px;
-    height: calc(100% - 60px);
   }
 
   .hero-section {
     padding: 20px 0 15px;
-    height: 100%;
   }
 
   .hero-layout {
@@ -2425,7 +2411,6 @@ const openAdminPanel = () => {
     gap: 20px;
     text-align: center;
     flex: 1;
-    max-height: 600px;
   }
 
   .hero-title {
@@ -2501,9 +2486,6 @@ const openAdminPanel = () => {
 }
 
 @media (max-width: 480px) {
-  .home {
-    max-height: 600px;
-  }
   
   .hero-section {
     padding: 15px 0 10px;

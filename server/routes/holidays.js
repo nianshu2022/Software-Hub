@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
   try {
     const { name, date, type, is_workday, description, year } = req.body;
     
-    const [result] = await db.execute(`
+    const [result] = await pool.execute(`
       INSERT INTO holidays (name, date, type, is_workday, description, year)
       VALUES (?, ?, ?, ?, ?, ?)
     `, [name, date, type, is_workday, description, year]);
@@ -111,7 +111,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     
-    await db.execute('DELETE FROM holidays WHERE id = ?', [id]);
+    await pool.execute('DELETE FROM holidays WHERE id = ?', [id]);
     
     res.json({ success: true, message: '节假日删除成功' });
   } catch (error) {

@@ -118,7 +118,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  overflow: hidden; // 禁止页面滚动
 }
 
 .main-content {
@@ -126,8 +125,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   padding-top: 70px;
-  height: calc(100vh - 70px); // 减去头部高度
-  overflow: hidden; // 禁止内容区域滚动
 }
 
 // 页面标题区域
@@ -191,7 +188,6 @@ onMounted(() => {
 .software-showcase {
   flex: 1;
   padding: 20px 0;
-  overflow: hidden; // 禁止滚动
 }
 
 .showcase-content {
@@ -205,7 +201,6 @@ onMounted(() => {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
   flex: 1;
-  overflow-y: auto; // 允许网格内部滚动
   padding: 10px 0;
   
   // 自定义滚动条
@@ -304,7 +299,6 @@ onMounted(() => {
 @media (max-width: 768px) {
   .main-content {
     padding-top: 60px;
-    height: calc(100vh - 60px);
   }
   
   .page-header {

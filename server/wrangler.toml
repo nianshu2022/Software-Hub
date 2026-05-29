@@ -1,0 +1,12 @@
+name = "software-hub-backend"
+main = "worker.js"
+compatibility_date = "2026-05-29"
+compatibility_flags = [ "nodejs_compat", "enable_nodejs_http_server_modules" ]
+
+[vars]
+NODE_ENV = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "software-hub-db"
+database_id = "83681b6d-49a9-4296-aaf7-5e9135fae8ac"

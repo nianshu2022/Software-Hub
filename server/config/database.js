@@ -1,36 +1,38 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
+const { env } = require('cloudflare:workers');
 
-const dbConfig = {
-  host: process.env.DB_HOST || '120.48.32.130',
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '1qaz@wsx',
-  database: process.env.DB_NAME || 'software_download',
-  charset: 'utf8mb4',
-  timezone: '+08:00',
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true
+const pool = {
+  execute: async (sql, params = []) => {
+    // Cloudflare D1 uses prepare().bind().all() for reads, and prepare().bind().run() for writes.
+    const isSelect = /^\s*(SELECT|SHOW|PRAGMA|WITH)\b/i.test(sql);
+    
+    try {
+      const stmt = env.DB.prepare(sql).bind(...params);
+      
+      if (isSelect) {
+        const res = await stmt.all();
+        return [res.results || [], null];
+      } else {
+        const res = await stmt.run();
+        return [{
+          insertId: res.meta.last_row_id || null,
+          affectedRows: res.meta.changes || 0
+        }, null];
+      }
+    } catch (error) {
+      console.error('D1 Query Error:', error);
+      throw error;
+    }
+  }
 };
 
-// 创建连接池
-const pool = mysql.createPool({
-  ...dbConfig,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
-
-// 测试数据库连接
 const testConnection = async () => {
   try {
-    const connection = await pool.getConnection();
-    console.log('✅ 数据库连接成功');
-    connection.release();
+    // Run a simple query to verify D1 is working
+    await pool.execute('SELECT 1');
+    console.log('✅ D1 数据库连接测试成功');
   } catch (error) {
-    console.error('❌ 数据库连接失败:', error.message);
-    process.exit(1);
+    console.error('❌ D1 数据库连接测试失败:', error.message);
+    throw error;
   }
 };
 
