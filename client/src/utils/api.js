@@ -1,9 +1,20 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
+export const API_BASE_URL = process.env.VUE_APP_API_BASE_URL || (
+  process.env.NODE_ENV === 'production'
+    ? 'https://software-hub-backend.2478951652.workers.dev/api'
+    : '/api'
+)
+
+export const apiFetch = (path, options = {}) => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return fetch(`${API_BASE_URL}${normalizedPath}`, options)
+}
+
 // 创建axios实例
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

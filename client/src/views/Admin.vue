@@ -240,6 +240,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSoftwareStore } from '@/stores/software'
+import { apiFetch } from '@/utils/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import SoftwareDialog from '@/components/SoftwareDialog.vue'
 import CategoryDialog from '@/components/CategoryDialog.vue'
@@ -352,7 +353,7 @@ const loadCategories = async () => {
 const loadUsersList = async () => {
   loading.value = true
   try {
-    const response = await fetch('/api/users', {
+    const response = await apiFetch('/users', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
@@ -374,7 +375,7 @@ const loadUsersList = async () => {
 const toggleUserRole = async (user) => {
   try {
     const newRole = user.role === 'admin' ? 'editor' : 'admin'
-    const response = await fetch(`/api/users/${user.id}/role`, {
+    const response = await apiFetch(`/users/${user.id}/role`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -407,7 +408,7 @@ const deleteUser = async (user) => {
       }
     )
     
-    const response = await fetch(`/api/users/${user.id}`, {
+    const response = await apiFetch(`/users/${user.id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`

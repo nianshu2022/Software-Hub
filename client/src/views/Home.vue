@@ -392,6 +392,7 @@ import { useRouter } from 'vue-router'
 import { useSoftwareStore } from '@/stores/software'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import { apiFetch } from '@/utils/api'
 import { WEATHER_CONFIG, isApiKeyConfigured } from '@/config/weather'
 import {
   Download,
@@ -752,7 +753,7 @@ const getPlatformStats = async () => {
 // 获取节假日倒计时
 const getHolidayCountdown = async () => {
   try {
-    const response = await fetch('/api/holidays/next')
+    const response = await apiFetch('/holidays/next')
     const result = await response.json()
     
     if (result.success && result.data) {
@@ -814,7 +815,7 @@ const updateHolidayCountdown = () => {
 // 获取古诗词
 const getPoetry = async () => {
   try {
-    const response = await fetch('/api/poetry/random')
+    const response = await apiFetch('/poetry/random')
     const result = await response.json()
     
     if (result.success && result.data) {
