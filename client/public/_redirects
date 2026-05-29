@@ -1,0 +1,2 @@
+/api/*  https://software-hub-backend.2478951652.workers.dev/api/:splat  200
+/*      /index.html                                                200

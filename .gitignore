@@ -92,6 +92,9 @@ dist
 # Gatsby 文件
 .cache/
 public
+!client/public/
+!client/public/_headers
+!client/public/_redirects
 
 # Storybook 构建输出
 .out
